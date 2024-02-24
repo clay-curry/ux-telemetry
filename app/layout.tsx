@@ -23,16 +23,9 @@ export default function RootLayout({
   
   return (
     <html lang="en">
-      <body 
-        className="
-        items-center flex justify-center min-h-screen p-0 m-0 overflow-hidden
-      *:box-border *:bg-[#947cb0] box-border bg-[#947cb0]
-      "
-      >
-        <div>
-           <Pug />
-        </div>
-      </body>
+      <body>
+           <Pug  />
+       </body>
     </html>
   );
 }

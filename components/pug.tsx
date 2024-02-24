@@ -3,7 +3,10 @@
 import { useState, useRef, useEffect, Fragment } from 'react';
 
 import gsap from 'gsap';
+
 const { set, to, timeline, utils } = gsap;
+
+import { cn } from '@/lib/cn';
 
 const random = utils.random
 const armLimit = random(0, 3)
@@ -21,7 +24,7 @@ const SOUNDS = {
 }
 SOUNDS.GROAN.playbackRate = 2
 
-export const Pug = () => {
+export default function Pug({ width='200px'}: { width: string }) {
     const [checked, setChecked] = useState(false)
     const [count, setCount] = useState(1)
     const bearRef = useRef(null)
@@ -147,19 +150,25 @@ export const Pug = () => {
         if (checked) showTimeline()
     }, [checked, count])
 
+
+    // TODO: add error handling for invalid width
+
     return (
-        <Fragment>
-            <div className="w-[100px] left-[50%] absolute top-[50%] bg-transparent" style={{ transform: 'translate(-15%, -50%) rotate(5deg) translate(0, -75%)' }}>
-                <div ref={swearRef} className="
-        hidden absolute left-[105%] toclip-path-customp-0 bg-white font-semibold p-[10px] rounded-lg
-        before:top-[90%] before:right-[70%] before:height-[30px] before:width-[30px] before:clip-path-swear
-        "
-                    style={{ content: '' }}>
+        <div className={cn('aspect-[2/1] relative z-10 w-full items-center flex justify-center min-h-screen p-0 m-0 overflow-hidden *:box-border *:bg-[#947cb0] box-border bg-[#947cb0]')}>
+            <div className={cn(
+                "w-[100px] left-[50%] absolute top-[50%] bg-transparent", ``)} style={{ transform: 'translate(-15%, -50%) rotate(5deg) translate(0, -75%)' }}>
+                
+                {/* voice bubble */}
+                <div ref={swearRef} className="content-[''] p-[10px] before:height-[30px] before:width-[30px] hidden absolute left-[105%] toclip-path-customp-0 bg-white font-semibold rounded-lg before:top-[90%] before:right-[70%] before:clip-path-swear">
                     #@$%*!
                 </div>
+
+                {/* 
+                    bear (resizable)
+                */}
                 <svg
                     ref={bearRef}
-                    className="w-full bg-transparent" style={{ transform: 'translate(0, 100%)' }}
+                    className="w-full bg-transparent translate-y-[100%]"
                     viewBox="0 0 284.94574 359.73706"
                     preserveAspectRatio="xMinYMin">
                     <g id="layer1" transform="translate(-7.5271369,-761.38595)">
@@ -266,11 +275,17 @@ export const Pug = () => {
                     </g>
                 </svg>
             </div>
-            <div ref={armWrapRef} className="bg-transparent fixed h-[30px] w-[90px] z-[4] top-[50%] left-[50%]" style={{ transform: 'translate(0, -50%) rotate(0deg)' }}>
-                <svg
+
+            {/* 
+                reaching arm (resizable)
+                 h-[30px] w-[90px] 
+            */}
+            <div 
+                ref={armWrapRef}
+                className="h-[3%] w-[11.15%] bg-transparent fixed z-[4] top-[50%] left-[50%] translate-y-[-50%] rotate-0" 
+            >    <svg
                     ref={armRef}
-                    className="bg-transparent origin-left absolute h-full w-full top-[50%] left-[50%]"
-                    style={{ transform: 'translate(-35%, -50%) scaleX(1)' }}
+                    className="bg-transparent origin-left absolute h-full w-full top-[50%] left-[50%] translate-x-[-35%] translate-y-[-50%] scale-x-100"
                     viewBox="0 0 250.00001 99.999997"
                     preserveAspectRatio="xMinYMin">
                     <g transform="translate(868.57141,-900.93359)" id="layer1">
@@ -290,32 +305,64 @@ export const Pug = () => {
                     </g>
                 </svg>
             </div>
+
+            {/*
+
+                paw (resizable)
+
+            */}
             <div
                 ref={pawRef}
-                className="bg-[#784421] rounded-[100%] fixed h-[30px] w-[30px] z-10 top-[50%] left-[50%] origin-right"
-                style={{ transform: 'translate(80px, -15px) scaleX(0)' }}
+                className="h-[30px] w-[30px] bg-[#784421] rounded-[100%] fixed z-10 top-[50%] left-[50%] origin-right translate-x-[80px] translate-y-[-15px] scale-x-0"
             />
+
+            {/*
+                lower mask (resizable) 
+            */} 
             <div className="fixed top-[50%] left-0 right-0 bottom-0 bg-[#947cb0]" />
+
+            {/*
+                stacking context for checkbox
+            */}
             <div
-                className="checkbox rounded-[50px] h-[100px] fixed w-[200px] z-[5] top-[50%] left-[50%]"
-                style={{ transform: 'translate(-50%, -50%)' }}
+                className="rounded-[50px] h-[100px] fixed w-[200px] checkbox z-[5] top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]"
                 onMouseOver={onHover} onMouseOut={offHover}>
+                
+                {
+                    /*
+                    slider
+                    */
+                }
                 <input
                     type="checkbox"
                     className='cursor-pointer rounded-[50px] absolute top-0 right-0 left-0 bottom-0 opacity-0 z-10 h-full w-full m-0'
 
                     onChange={onChange} checked={checked} />
-                <div ref={bgRef} className="bg-[#aaa] rounded-[50px] h-full w-full z-10" />
+                {/*
+                    slider background
+                */
+
+                }
+                <div ref={bgRef} className="rounded-[50px] bg-[#aaa] h-full w-full z-10" />
+
+
+                {/*
+                    slider indicator (button)
+                */
+                }
                 <div
                     ref={indicatorRef}
-                    className="bg-transparent h-full w-[50%] rounded-[100%] absolute top-0 left-0
-            after:rounded-[100%]  after:h-[85%] after:w-[85%] after:bg-[#fff] after:absolute after:top-[50%] after:left-[50%] after:translate-x-[-50%] after:translate-y-[-50%]
-            "
-
-
-
+                    className={
+                        cn(
+                            "bg-transparent h-full rounded-[100%] absolute top-0 left-0",
+                            "after:rounded-[100%]  after:h-[85%] after:w-[85%] after:bg-[#fff] after:absolute after:top-[50%] after:left-[50%]",
+                            "after:translate-x-[-50%] after:translate-y-[-50%]" ,
+                            "w-[100px]")
+                    }
                 />
+
+                
             </div>
-        </Fragment>
+        </div>
     )
 }
